@@ -1,5 +1,5 @@
 # Overview
-A comprehensive C++ library and Arduino project for controlling NodeMCU (V2 & V3) boards over various communication interfaces.
+A comprehensive C++ driver for controlling ESP8266 or NodeMCU (V2 & V3) boards over various communication interfaces.
 
 **NodeMCU-Driver** provides a unified API for interacting with NodeMCU boards through HTTP, TCP, Serial communication interfaces, and a user-friendly dashboard for seamless configuration and control.
 
@@ -73,6 +73,11 @@ The following settings can be configured using the `config` command:
 
 # Contribution
 Contributions to **NodeMCU-Driver** are welcome! If you'd like to contribute to the project, please fork the repository and submit a pull request with your changes.
+
+Some topics that need work:
+- Better Flash memory management.
+- Adding Modbus TCP/IP as communication protocol.
+- Improvements to the control panel.
 
 # Changelog
 **Version 1.0.0**
