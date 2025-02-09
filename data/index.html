@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>NodeMCU Control Panel</title>
+    <!-- Import Materialize CSS -->
+    <link href="/materialize.min.css" rel="stylesheet">
+    <!-- Import Material Icons -->
+    <link href="/icons.css" rel="stylesheet">
+</head>
+<body class="indigo lighten-4">
+
+    <!-- Navigation Bar -->
+    <nav>
+        <div class="nav-wrapper indigo">
+            <a href="#!" class="brand-logo">NodeMCU</a>
+    	    <a href="#" data-target="slide-out" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+            <ul class="right hide-on-med-and-down">
+                <li><a href="#" id="home-link">Home</a></li>
+                <li><a href="#pin-config" id="pin-config-link">Pin Configuration</a></li>
+                <li><a href="#config-network" id="config-network-link">Network Configuration</a></li>
+                <li><a href="#config-server" id="config-server-link">Server Configuration</a></li>
+                <li><a href="#config-wifi" id="config-wifi-link">WiFi Configuration</a></li>
+                <li><a href="#read-pin" id="read-pin-link">Monitor Pins</a></li>
+                <li><a href="#write-pin" id="write-pin-link">Write Pins</a></li>
+            </ul>
+        </div>
+    </nav>
+    
+    <!-- Sidebar Navigation for Small Screens -->
+    <ul id="slide-out" class="sidenav">
+        <li><a href="#" id="home-linkk">Home</a></li>
+        <li><a href="#pin-config" id="pin-config-link">Pin Configuration</a></li>
+        <li><a href="#config-network" id="config-network-link">Network Configuration</a></li>
+        <li><a href="#config-server" id="config-server-link">Server Configuration</a></li>
+        <li><a href="#config-wifi" id="config-wifi-link">WiFi Configuration</a></li>
+        <li><a href="#read-pin" id="read-pin-link">Monitor Pins</a></li>
+        <li><a href="#write-pin" id="write-pin-link">Write Pins</a></li>
+    </ul>
+
+
+    <!-- Main Content -->
+    <div class="container" id="home-page">
+        <h2 class="center-align">Welcome to NodeMCU Control Panel</h2>
+        <div class="row">
+            <!-- Home Cards -->
+            <div class="col s12 m4">
+                <div class="card" id="pin-config-card">
+                    <div class="card-content indigo white-text">
+                        <span class="card-title"><b>Pin Configuration</b></span>
+                        <p>Configure the pins D0 to D7 as INPUT or OUTPUT. A0 is only available as an INPUT. No reboot required for changes to have effect.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col s12 m4">
+                <div class="card" id="config-network-card">
+                    <div class="card-content indigo white-text">
+                        <span class="card-title"><b>Network Configuration</b></span>
+                        <p>Configure network parameters (static IP, subnetmask, default gateway, DNS). A reboot is required for the changes to have an effect.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col s12 m4">
+                <div class="card" id="config-server-card">
+                    <div class="card-content indigo white-text">
+                        <span class="card-title"><b>Server Configuration</b></span>
+                        <p>Configure the ports of the TCP server and the HTTP server, default for TCP=333 and HTTP=80. A reboot is required for the changes to have an effect.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col s12 m4">
+                <div class="card" id="config-wifi-card">
+                    <div class="card-content indigo white-text">
+                        <span class="card-title"><b>Wi-Fi Credentials</b></span>
+                        <p>Configure the Wi-Fi SSID and password, a reboot is required for the changes to have an effect.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col s12 m4">
+                <div class="card" id="read-pin-card">
+                    <div class="card-content indigo white-text">
+                        <span class="card-title"><b>Monitor Pins</b></span>
+                        <p>Read the current values of GPIO pins on the NodeMCU.</p>
+                    </div>
+                    
+                </div>
+            </div>
+            <div class="col s12 m4">
+                <div class="card" id="write-pin-card">
+                    <div class="card-content indigo white-text">
+                        <span class="card-title"><b>Write Pins</b></span>
+                        <p>Write HIGH or LOW values tothe digital GPIO pins on the NodeMCU.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sections to Hide/Show -->
+    <div class="container" id="wifi-section" style="display:none;">
+        <h5>Configuration of Wi-Fi credentials</h5>
+        <form id="credentials-form">
+            <div class="input-field">
+                <input type="text" id="wifi-ssid" required>
+                <label for="wifi-ssid">WiFi SSID</label>
+            </div>
+            <div class="input-field">
+                <input type="password" id="wifi-pass" required>
+                <label for="wifi-pass">WiFi Password</label>
+            </div>
+            <button type="submit" class="btn indigo">Save Credentials</button>
+        </form>
+    </div>
+
+    <div class="container" id="network-section" style="display:none;">
+        <h5>Configuration of network settings</h5>
+        <form id="network-form">
+            <div class="input-field">
+                <input type="text" id="static-ip" required>
+                <label for="static-ip">Static IP</label>
+            </div>
+            <div class="input-field">
+                <input type="text" id="subnet" required>
+                <label for="subnet">Subnet Mask</label>
+            </div>
+            <div class="input-field">
+                <input type="text" id="gateway" >
+                <label for="gateway">Gateway</label>
+            </div>
+            <div class="input-field">
+                <input type="text" id="dns1" >
+                <label for="dns1">Primary DNS</label>
+            </div>
+            <div class="input-field">
+                <input type="text" id="dns2" >
+                <label for="dns2">Secundairy DNS</label>
+            </div>
+            <button type="submit" class="btn indigo">Save Settings</button>
+        </form>
+    </div>
+
+    <div class="container" id="server-section" style="display:none;">
+        <h5>Configuration server settings</h5>
+        <form id="server-form">
+            <div class="input-field">
+                <input type="number" id="tcp-port" required>
+                <label for="tcp-port">TCP Port</label>
+            </div>
+            <div class="input-field">
+                <input type="number" id="max-clients" required>
+                <label for="max-clients">Maximum TCP clients</label>
+            </div>
+            <div class="input-field">
+                <input type="number" id="timeout" required>
+                <label for="timeout">Timeout (Close connection when no activity)</label>
+            </div>
+            <div class="input-field">
+                <input type="number" id="http-port" required>
+                <label for="http-port">HTTP Port</label>
+            </div>
+            <button type="submit" class="btn indigo">Save Settings</button>
+        </form>
+    </div>
+
+    <div class="container" id="pin-config-section" style="display:none;">
+        <h5>Pin Configuration</h5>
+        <form id="pin-config-form">
+            <div class="input-field">
+                <select id="pin-d0-mode" required>
+                    <option value="0">D0 - NOT SET</option>
+                    <option value="16">D0 - INPUT</option>
+                    <option value="32">D0 - OUTPUT</option>
+                </select>
+                <label for="pin-d0-mode">D0 Pin Mode</label>
+            </div>
+            <div class="input-field">
+                <select id="pin-d1-mode" required>
+                    <option value="0">D1 - NOT SET</option>
+                    <option value="16">D1 - INPUT</option>
+                    <option value="32">D1 - OUTPUT</option>
+                </select>
+                <label for="pin-d1-mode">D1 Pin Mode</label>
+            </div>
+            <div class="input-field">
+                <select id="pin-d2-mode" required>
+                    <option value="0">D2 - NOT SET</option>
+                    <option value="16">D2 - INPUT</option>
+                    <option value="32">D2 - OUTPUT</option>
+                </select>
+                <label for="pin-d2-mode">D2 Pin Mode</label>
+            </div>
+            <div class="input-field">
+                <select id="pin-d3-mode" required>
+                    <option value="0">D3 - NOT SET</option>
+                    <option value="16">D3 - INPUT</option>
+                    <option value="32">D3 - OUTPUT</option>
+                </select>
+                <label for="pin-d3-mode">D3 Pin Mode</label>
+            </div>
+            <div class="input-field">
+                <select id="pin-d4-mode" required>
+                    <option value="0">D4 - NOT SET</option>
+                    <option value="16">D4 - INPUT</option>
+                    <option value="32">D4 - OUTPUT</option>
+                </select>
+                <label for="pin-d4-mode">D4 Pin Mode</label>
+            </div>
+            <div class="input-field">
+                <select id="pin-d5-mode" required>
+                    <option value="0">D5 - NOT SET</option>
+                    <option value="16">D5 - INPUT</option>
+                    <option value="32">D5 - OUTPUT</option>
+                </select>
+                <label for="pin-d5-mode">D5 Pin Mode</label>
+            </div>
+            <div class="input-field">
+                <select id="pin-d6-mode" required>
+                    <option value="0">D6 - NOT SET</option>
+                    <option value="16">D6 - INPUT</option>
+                    <option value="32">D6 - OUTPUT</option>
+                </select>
+                <label for="pin-d6-mode">D6 Pin Mode</label>
+            </div>
+            <div class="input-field">
+                <select id="pin-d7-mode" required>
+                    <option value="0">D7 - NOT SET</option>
+                    <option value="16">D7 - INPUT</option>
+                    <option value="32">D7 - OUTPUT</option>
+                </select>
+                <label for="pin-d7-mode">D7 Pin Mode</label>
+            </div>
+            <div class="input-field">
+                <select id="pin-d8-mode" required>
+                    <option value="0">D8 - NOT SET</option>
+                    <option value="16">D8 - INPUT</option>
+                    <option value="32">D8 - OUTPUT</option>
+                </select>
+                <label for="pin-d8-mode">D8 Pin Mode</label>
+            </div>
+            <button type="submit" class="btn indigo">Save Pin Configuration</button>
+        </form>
+    </div>
+
+    <div class="container" id="read-pin-section" style="display:none;">
+        <h5>Read Pin Values</h5>
+        <table class="striped">
+            <thead>
+                <tr><th>Pin</th><th>Value</th></tr>
+            </thead>
+            <tbody>
+                <script>
+                    const readPins = ['A0', 'D0', 'D1', 'D2', 'D3', 'D4', 'D5', 'D6', 'D7'];
+                    document.write(readPins.map(pin => `<tr><td>${pin}</td><td id="pin-${pin}"></td></tr>`).join(''));
+                </script>
+            </tbody>
+        </table>
+        <button class="btn indigo" id="read-pins-btn">Read Pin Values</button>
+    </div>
+
+    <div class="container" id="write-pin-section" style="display:none;">
+        <h5>Write Pin Values</h5>
+        <table class="striped">
+            <thead>
+                <tr><th>Pin</th><th>Action</th></tr>
+            </thead>
+            <tbody id="pinTable"></tbody>
+        </table>
+    </div>
+
+    <!-- Import jQuery and Materialize JS -->
+    <script src="/jquery.min.js"></script>
+    <script src="/materialize.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            // Initialize the sidebar
+            $(".sidenav").sidenav();
+
+            // Close sidenav when a menu item is clicked
+            $('.sidenav a').on('click', function () {
+              $('.sidenav').sidenav('close');
+            });
+
+            // Initialize Materialize form select
+            $('select').formSelect();
+
+            // Show home page initially
+            $('#home-page').show();
+            $('#wifi-section').hide();
+            $('#network-section').hide();
+            $('#server-section').hide();
+            $('#pin-config-section').hide();
+            $('#read-pin-section').hide();
+            $('#write-pin-section').hide();
+
+            const pins = ['D0', 'D1', 'D2', 'D3', 'D4', 'D5', 'D6', 'D7'];
+            let tableRows = pins.map(pin => 
+                `<tr>
+                    <td>${pin}</td>
+                    <td>
+                        <button class='btn high-btn' data-pin='${pin}' data-value='1'>HIGH</button>
+                        <button class='btn red low-btn' data-pin='${pin}' data-value='0'>LOW</button>
+                    </td>
+                </tr>`).join('');
+            $("#pinTable").html(tableRows);
+
+            // Hide all sections and show the home page
+            function hideAllSections() {
+                $('#home-page').hide();
+                $('#wifi-section').hide();
+                $('#network-section').hide();
+                $('#server-section').hide();
+                $('#pin-config-section').hide();
+                $('#read-pin-section').hide();
+                $('#write-pin-section').hide();
+            }
+
+            // Click on Home link (to return to the home page)
+            $('#home-link,#home-linkk').click(function (e) {
+                e.preventDefault();
+                hideAllSections();
+                $('#home-page').show();
+            });
+
+            // Click on Wifi card or sidebar link
+            $('#config-wifi-card, #config-wifi-link').click(function (e) {
+                e.preventDefault();
+                hideAllSections();
+                $('#wifi-section').show();
+            });
+
+            // Click on Network card or sidebar link
+            $('#config-network-card, #config-network-link').click(function (e) {
+                e.preventDefault();
+                hideAllSections();
+                $('#network-section').show();
+            });
+
+            // Click on Server card or sidebar link
+            $('#config-server-card, #config-server-link').click(function (e) {
+                e.preventDefault();
+                hideAllSections();
+                $('#server-section').show();
+            });
+
+            // Click on Pin Configuration card or sidebar link
+            $('#pin-config-card, #pin-config-link').click(function (e) {
+                e.preventDefault();
+                hideAllSections();
+                $('#pin-config-section').show();
+            });
+
+            // Click on Read Pin card or sidebar link
+            $('#read-pin-card, #read-pin-link').click(function (e) {
+                e.preventDefault();
+                hideAllSections();
+                $('#read-pin-section').show();
+            });
+
+            // Click on Write Pin card or sidebar link
+            $('#write-pin-card, #write-pin-link').click(function (e) {
+                e.preventDefault();
+                hideAllSections();
+                $('#write-pin-section').show();
+            });
+            // Wifi Form Submit
+            $('#wifi-form').submit(function (e) {
+                e.preventDefault();
+                const wifiData = {
+                    ssid: $('#wifi-ssid').val(),
+                    pass: $('#wifi-pass').val()
+                };
+                configure( "ssid", wifiData.ssid );
+                configure( "pwd", wifiData.pass );
+                console.log('Configuration saved:', wifiData);
+                alert('Configuration saved!');
+            });
+            // Network Form Submit
+            $('#network-form').submit(function (e) {
+                e.preventDefault();
+                const networkData = {
+                    staticIP: $('#static-ip').val(),
+                    subnet: $('#subnet').val(),
+                    gateway: $('#gateway').val(),
+                    dns1: $('#dns1').val(),
+                    dns2: $('#dns2').val()
+                };
+                configure( "ip", networkData.staticIP );
+                configure( "subnet", networkData.subnet );
+                configure( "gateway", networkData.gateway );
+                configure( "dns1", networkData.dns );
+                configure( "dns2", networkData.dns2 );
+                console.log('Configuration saved:', networkData);
+                alert('Configuration saved!');
+            });
+
+            // Server Form Submit
+            $('#server-form').submit(function (e) {
+                e.preventDefault();
+                const serverData = {
+                    tcpPort: $('#tcp-port').val(),
+                    maxclients: $('#max-clients').val(),
+                    timeout: $('#timeout').val(),
+                    httpPort: $('#http-port').val()
+                };
+                configure( "tcp-port", serverData.tcpPort );
+                configure( "max-clients", serverData.maxclients );
+                configure( "timeout", serverData.timeout );
+                configure( "http-port", serverData.httpPort );
+                console.log('Configuration saved:', serverData);
+                alert('Configuration saved!');
+            });
+
+            // Pin Configuration Form Submit
+            $('#pin-config-form').submit(function (e) {
+                e.preventDefault();
+                
+                const pins = {
+                    D0: $('#pin-d0-mode').val(),
+                    D1: $('#pin-d1-mode').val(),
+                    D2: $('#pin-d2-mode').val(),
+                    D3: $('#pin-d3-mode').val(),
+                    D4: $('#pin-d4-mode').val(),
+                    D5: $('#pin-d5-mode').val(),
+                    D6: $('#pin-d6-mode').val(),
+                    D7: $('#pin-d7-mode').val(),
+                    D8: $('#pin-d8-mode').val()
+                };
+                if( pins.D0 == 16 ) configurePin( "D0", "input" );
+                if( pins.D1 == 16 ) configurePin( "D1", "input" );
+                if( pins.D2 == 16 ) configurePin( "D2", "input" );
+                if( pins.D3 == 16 ) configurePin( "D3", "input" );
+                if( pins.D4 == 16 ) configurePin( "D4", "input" );
+                if( pins.D5 == 16 ) configurePin( "D5", "input" );
+                if( pins.D6 == 16 ) configurePin( "D6", "input" );
+                if( pins.D7 == 16 ) configurePin( "D7", "input" );
+                if( pins.D8 == 16 ) configurePin( "D8", "input" );
+                if( pins.D0 == 32 ) configurePin( "D0", "output" );
+                if( pins.D1 == 32 ) configurePin( "D1", "output" );
+                if( pins.D2 == 32 ) configurePin( "D2", "output" );
+                if( pins.D3 == 32 ) configurePin( "D3", "output" );
+                if( pins.D4 == 32 ) configurePin( "D4", "output" );
+                if( pins.D5 == 32 ) configurePin( "D5", "output" );
+                if( pins.D6 == 32 ) configurePin( "D6", "output" );
+                if( pins.D7 == 32 ) configurePin( "D7", "output" );
+                if( pins.D8 == 32 ) configurePin( "D8", "output" );
+
+                console.log('Pin modes saved:', pins);
+                alert('Pin configuration saved!');
+            });
+
+            // Read Pin Form Submit
+            $('#read-pins-btn').click(function (e) {
+                e.preventDefault();
+                readPins();
+            });
+            
+            // Function to configure a setting
+            function configure(setting, value) {
+                $.post("/configure", { arg1: setting, arg2: value })
+                    .done(function(response) {
+                        console.log("Configured:", response);
+                    })
+                    .fail(function(error) {
+                        console.error("Error configuring:", error);
+                    });
+            }
+
+            // Function to load configuration values and update the website
+            function loadConfig() {
+                $.get("/configure/show")
+                    .done(function(response) {
+                        let values = response.split("\n"); // Assuming values are comma-separated
+                        $("#pin-d0-mode").val(values[0]);
+                        $("#pin-d1-mode").val(values[1]);
+                        $("#pin-d2-mode").val(values[2]);
+                        $("#pin-d3-mode").val(values[3]);
+                        $("#pin-d4-mode").val(values[4]);
+                        $("#pin-d5-mode").val(values[5]);
+                        $("#pin-d6-mode").val(values[6]);
+                        $("#pin-d7-mode").val(values[7]);
+                        $("#pin-d8-mode").val(values[8]);
+                        $("#wifi-ssid").val(values[9]);
+                        $("#wifi-pass").val(values[10]);
+                        $("#static-ip").val(values[11]);
+                        $("#subnet").val(values[12]);
+                        $("#gateway").val(values[13]);
+                        $("#tcp-port").val(values[14]);
+                        $("#http-port").val(values[15]);
+                        $("#dns1").val(values[16]);
+                        $("#dns2").val(values[17]);
+                        $("#max-clients").val(values[18]);
+                        $("#timeout").val(values[19]);
+                        
+                        // Update Materialize labels and selects
+                        M.updateTextFields();
+                        $('select').formSelect();
+                    })
+                    .fail(function(error) {
+                        console.error("Error loading configuration:", error);
+                    });
+            }
+
+            // Function to configure a pin
+            function configurePin(pinName, mode) {
+                $.post("/configure", { arg1: "pin", arg2: pinName, arg3: mode })
+                    .done(function(response) {
+                        console.log("Pin configured:", response);
+                    })
+                    .fail(function(error) {
+                        console.error("Error configuring pin:", error);
+                    });
+            }
+
+            // Function to read pin values and update the website
+            function readPins() {
+                $.get("/read_all")
+                    .done(function(response) {
+                        let pinValues = response.split(","); // Assuming values are comma-separated
+                        $("#pin-A0").text(pinValues[0]);
+                        $("#pin-D0").text(pinValues[1]);
+                        $("#pin-D1").text(pinValues[2]);
+                        $("#pin-D2").text(pinValues[3]);
+                        $("#pin-D3").text(pinValues[4]);
+                        $("#pin-D4").text(pinValues[5]);
+                        $("#pin-D5").text(pinValues[6]);
+                        $("#pin-D6").text(pinValues[7]);
+                        $("#pin-D7").text(pinValues[8]);
+                        $("#pin-D8").text(pinValues[9]);
+                    })
+                    .fail(function(error) {
+                        console.error("Error reading pins:", error);
+                    });
+            }
+
+            // Function to write a value to a pin
+            function writePin(pin, value) {
+                $.post("/write", { pin: pin, value: value })
+                    .done(function(response) {
+                        //$("#pinValue" + pin).text(response); // Update corresponding pin value in the website
+                    })
+                    .fail(function(error) {
+                        console.error("Error writing to pin:", error);
+                    });
+            }
+
+            // Event of write button clicks 
+            $(document).on("click", ".high-btn, .low-btn", function () {
+                let pin = $(this).data("pin");
+                let value = $(this).data("value");
+                writePin(pin, value);
+            });
+
+            loadConfig();
+            readPins();
+        });
+    </script>
+
+</body>
+</html>
